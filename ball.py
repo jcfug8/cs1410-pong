@@ -1,27 +1,73 @@
 import pygame
+from math import sqrt
+from random import randint
 
 class Ball:
 
     def __init__(self, width, height):
+        pygame.mixer.pre_init(44100, -16, 2, 4096) #frequency, size, channels, buffersize
+        pygame.init() #turn all of pygame on.
+        self.wall_hit = pygame.mixer.Sound("sounds/ping_pong_8bit_plop.wav")
+        self.paddle_hit = pygame.mixer.Sound("sounds/ping_pong_8bit_beeep.wav")
+        self.back_wall_hit = pygame.mixer.Sound("sounds/ping_pong_8bit_peeeeeep.wav")
         self.screen_width = width
         self.screen_height = height
         self.radius = 10
-        self.x = 50
-        self.y = 50
-        self.dx = 10
-        self.dy = 2
+        self.x = 0
+        self.y = 0
+        self.dx = 0
+        self.dy = 0
+        self.set_speed_and_position()
         self.color = (100,100,100)
+
+    def set_speed_and_position(self):
+        self.dx = randint(10,20)
+        self.dy = randint(-20,20)
+        if self.dy == 0:
+            self.dy = -1
+        self.y = randint(0,self.screen_height)
+        self.x = self.screen_width // 3
 
     def paint(self, surface):
         pygame.draw.circle(surface, self.color, (self.x, self.y), self.radius)
 
-    def move_logic(self, paddle_x, paddle_y, paddle_height, paddle_width):
-
-        if self.x + self.radius >= self.screen_width or self.x - self.radius <= 0:
-            self.dx *= -1
-        if self.y + self.radius >= self.screen_height or self.y - self.radius <= 0:
-            self.dy *= -1
-        if self.x - self.radius <= paddle_x + paddle_width and self.y <= paddle_y + paddle_height and self.y >= paddle_y:
-            self.dx *= -1
+    def move(self):
         self.y += self.dy
         self.x += self.dx
+        return
+
+    def collision_logic(self, paddle_x, paddle_y, paddle_height, paddle_width):
+
+        if self.x + self.radius >= self.screen_width:
+            self.dx *= -1
+            self.x = self.screen_width - self.radius
+            self.wall_hit.play()
+            return "right wall"
+        elif self.x - self.radius <= 0:
+            self.set_speed_and_position()
+            self.back_wall_hit.play()
+            return "back wall"
+        elif self.y + self.radius >= self.screen_height:
+            self.dy *= -1
+            self.y = self.screen_height - self.radius
+            self.wall_hit.play()
+            return "bottom wall"
+        elif self.y - self.radius <= 0:
+            self.dy *= -1
+            self.y = self.radius
+            self.wall_hit.play()
+            return "top wall"
+        if sqrt(abs(self.radius**2 - (self.x-self.radius)**2)) <= paddle_x + paddle_width:
+            if sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
+                if sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
+                    if self.y - paddle_y < 0: # UP
+                        if self.dy > 0:
+                            self.dy *= -1
+                    elif self.y - paddle_y > paddle_height: # DOWN
+                        if self.dy < 0:
+                            self.dy *= -1
+                    self.dx *= -1
+                    self.x = paddle_x + paddle_width + self.radius
+                    self.paddle_hit.play()
+                    return "paddle"
+        return "none"
