@@ -18,7 +18,7 @@ class PygameStarter(game_mouse.Game):
         self.paddle2 = paddle.Paddle(width, height, width - 40)
         self.score = score.Score()
         return
-    def game_logic(self, keys, newkeys, buttons, newbuttons, mouse_position):
+    def game_logic(self, keys, newkeys, buttons, newbuttons, mouse_position, surface):
         x = mouse_position[0]
         y = mouse_position[1]
 
@@ -30,8 +30,8 @@ class PygameStarter(game_mouse.Game):
 
         self.paddle.move_logic(keys)
         self.paddle2.move_logic2(keys)
-        self.ball.collision_paddle1(self.paddle.x, self.paddle.y, self.paddle.height, self.paddle.width)
-        self.ball.collision_paddle2(self.paddle2.x, self.paddle2.y, self.paddle2.height, self.paddle2.width)
+        self.ball.collision_paddle1(self.paddle.x, self.paddle.y, self.paddle.height, self.paddle.width, surface)
+        self.ball.collision_paddle2(self.paddle2.x, self.paddle2.y, self.paddle2.height, self.paddle2.width, surface)
         point = self.ball.collision_wall()
         self.score.update(point)
         self.ball.move()

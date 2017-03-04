@@ -23,7 +23,7 @@ class Game:
 
         # set the title of the window
         pygame.display.set_caption(name)
-        
+
         # set time tracking
         self.clock = pygame.time.Clock()
         self.this_frame_time = pygame.time.get_ticks() / 1000.
@@ -32,10 +32,10 @@ class Game:
 
     def get_frame_time(self):
         return self.this_frame_time
-        
+
     def get_delta_time(self):
         return self.delta_time
-        
+
     def game_logic(self, keys, newkeys, buttons, newbuttons, mouse_position):
         raise NotImplementedError()
         return
@@ -78,7 +78,7 @@ class Game:
 
                 if e.type == pygame.MOUSEMOTION:
                     mouse_position = e.pos
-                
+
                 # track which keys are currently set
                 if e.type == pygame.KEYDOWN:
                     keys.add(e.key)
@@ -90,9 +90,8 @@ class Game:
             self.delta_time = (self.this_frame_time - self.last_frame_time)
             self.last_frame_time = self.this_frame_time
             if self.on:
-                self.game_logic(keys, newkeys, buttons, newbuttons, mouse_position)
+                self.game_logic(keys, newkeys, buttons, newbuttons, mouse_position, self.screen)
                 self.paint(self.screen)
 
             pygame.display.flip()
         return
-
