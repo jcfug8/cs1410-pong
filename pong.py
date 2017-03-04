@@ -14,7 +14,8 @@ class PygameStarter(game_mouse.Game):
                                  height,
                                  fps)
         self.ball = ball.Ball(width, height)
-        self.paddle = paddle.Paddle(width, height)
+        self.paddle = paddle.Paddle(width, height, 20)
+        self.paddle2 = paddle.Paddle(width, height, width - 40)
         self.score = score.Score()
         return
     def game_logic(self, keys, newkeys, buttons, newbuttons, mouse_position):
@@ -27,14 +28,16 @@ class PygameStarter(game_mouse.Game):
         if 1 in newbuttons:
             print("button clicked")
 
-
         self.paddle.move_logic(keys)
-        point = self.ball.collision_logic(self.paddle.x, self.paddle.y, self.paddle.height, self.paddle.width)
+        self.paddle2.move_logic2(keys)
+        self.ball.collision_paddle1(self.paddle.x, self.paddle.y, self.paddle.height, self.paddle.width)
+        self.ball.collision_paddle2(self.paddle2.x, self.paddle2.y, self.paddle2.height, self.paddle2.width)
+        point = self.ball.collision_wall()
         self.score.update(point)
         self.ball.move()
 
-        #self.ball.x = x
-        #self.ball.y = y
+        # self.ball.x = x
+        # self.ball.y = y
         return
 
     def paint(self, surface):
@@ -42,10 +45,11 @@ class PygameStarter(game_mouse.Game):
         self.score.paint(surface, self.width)
         self.ball.paint(surface)
         self.paddle.paint(surface)
+        self.paddle2.paint(surface)
         return
 
 def main():
-    screen_width = 500
+    screen_width = 700
     screen_height = 500
     frames_per_second = 20
     game = PygameStarter(screen_width, screen_height, frames_per_second)

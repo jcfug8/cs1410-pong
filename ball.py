@@ -36,17 +36,17 @@ class Ball:
         self.x += self.dx
         return
 
-    def collision_logic(self, paddle_x, paddle_y, paddle_height, paddle_width):
-
+    def collision_wall(self):
         if self.x + self.radius >= self.screen_width:
             self.dx *= -1
             self.x = self.screen_width - self.radius
-            self.wall_hit.play()
+            self.set_speed_and_position()
+            self.back_wall_hit.play()
             return "right wall"
         elif self.x - self.radius <= 0:
             self.set_speed_and_position()
             self.back_wall_hit.play()
-            return "back wall"
+            return "left wall"
         elif self.y + self.radius >= self.screen_height:
             self.dy *= -1
             self.y = self.screen_height - self.radius
@@ -57,6 +57,8 @@ class Ball:
             self.y = self.radius
             self.wall_hit.play()
             return "top wall"
+
+    def collision_paddle1(self, paddle_x, paddle_y, paddle_height, paddle_width):
         if sqrt(abs(self.radius**2 - (self.x-self.radius)**2)) <= paddle_x + paddle_width:
             if sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
                 if sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
@@ -70,4 +72,23 @@ class Ball:
                     self.x = paddle_x + paddle_width + self.radius
                     self.paddle_hit.play()
                     return "paddle"
+        return "none"
+
+    def collision_paddle2(self, paddle_x, paddle_y, paddle_height, paddle_width):
+        if sqrt(abs(self.radius**2 - (self.x + self.radius)**2)) >= paddle_x:
+            if sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
+                if sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
+                    if self.y - paddle_y < 0: # UP
+                        if self.dy > 0:
+                            self.dy *= -1
+                    elif self.y - paddle_y > paddle_height: # DOWN
+                        if self.dy < 0:
+                            self.dy *= -1
+                    self.dx *= -1
+                    self.x = paddle_x - self.radius
+                    self.paddle_hit.play()
+                    return "paddle"
+        print("1 ", sqrt(abs(self.radius**2 - (self.x + self.radius)**2)) >= paddle_x)
+        print("2 ", sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y)
+        print("3 ", sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height)
         return "none"
