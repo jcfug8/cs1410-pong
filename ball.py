@@ -1,5 +1,5 @@
 import pygame
-from math import sqrt
+import math
 from random import randint
 
 class Ball:
@@ -65,9 +65,9 @@ class Ball:
             return "top wall"
 
     def collision_paddle1(self, paddle_x, paddle_y, paddle_height, paddle_width, surface = None):
-        if sqrt(abs(self.radius**2 - (self.x-self.radius)**2)) <= paddle_x + paddle_width and self.x > paddle_x + paddle_width // 2:
-            if sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
-                if sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
+        if math.sqrt(abs(self.radius**2 - (self.x-self.radius)**2)) <= paddle_x + paddle_width and self.x > paddle_x + paddle_width // 2:
+            if math.sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
+                if math.sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
                     myfont = pygame.font.SysFont('Comic Sans MS', 30)
                     text = 'Bounce'
                     textsurface = myfont.render(text, False, (0, 0, 0))
@@ -85,9 +85,9 @@ class Ball:
         return "none"
 
     def collision_paddle2(self, paddle_x, paddle_y, paddle_height, paddle_width, surface = None):
-        if sqrt(abs(self.radius**2 - (self.x + self.radius)**2)) >= paddle_x and self.x < paddle_x + paddle_width // 2:
-            if sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
-                if sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
+        if math.sqrt(abs(self.radius**2 - (self.x + self.radius)**2)) >= paddle_x and self.x < paddle_x + paddle_width // 2:
+            if math.sqrt(abs(self.radius**2 - (self.y + self.radius)**2)) >= paddle_y:
+                if math.sqrt(abs(self.radius**2 - (self.y - self.radius)**2)) <= paddle_y + paddle_height:
                     myfont = pygame.font.SysFont('Comic Sans MS', 30)
                     text = 'Bounce'
                     textsurface = myfont.render(text, False, (0, 0, 0))

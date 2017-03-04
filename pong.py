@@ -51,7 +51,7 @@ class PygameStarter(game_mouse.Game):
 def main():
     screen_width = 700
     screen_height = 500
-    frames_per_second = 20
+    frames_per_second = 30
     game = PygameStarter(screen_width, screen_height, frames_per_second)
     game.main_loop()
     return
